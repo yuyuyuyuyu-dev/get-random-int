@@ -13,7 +13,9 @@ val uiModule = module {
     single {
         Circuit.Builder()
 
-            .addPresenter<GetRandomIntScreen, GetRandomIntScreen.State>(GetRandomIntPresenter())
+            .addPresenter<GetRandomIntScreen, GetRandomIntScreen.State>(
+                GetRandomIntPresenter(getRandomIntUseCase = get()),
+            )
             .addUi<GetRandomIntScreen, GetRandomIntScreen.State> { state, modifier ->
                 GetRandomInt(state, modifier)
             }

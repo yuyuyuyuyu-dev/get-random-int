@@ -11,6 +11,7 @@ import com.slack.circuit.backstack.rememberSaveableBackStack
 import com.slack.circuit.foundation.CircuitCompositionLocals
 import com.slack.circuit.foundation.NavigableCircuitContent
 import com.slack.circuit.foundation.rememberCircuitNavigator
+import dev.yuyuyuyuyu.getrandomint.di.domainModule
 import dev.yuyuyuyuyu.getrandomint.di.uiModule
 import dev.yuyuyuyuyu.getrandomint.ui.getRandomInt.GetRandomIntScreen
 import dev.yuyuyuyuyu.getrandomint.ui.openSourceLicenseList.OpenSourceLicenseListScreen
@@ -37,7 +38,7 @@ fun GetRandomIntApp() {
     KoinApplication(
         application = {
             printLogger()
-            modules(uiModule)
+            modules(uiModule, domainModule)
         },
     ) {
         MyMaterialTheme {
