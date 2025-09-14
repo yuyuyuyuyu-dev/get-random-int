@@ -19,12 +19,12 @@ class GetRandomIntPresenter(
         return GetRandomIntScreen.State(
             min = min,
             max = max,
-            randomInt = let {
-                val min = min ?: return@let null
-                val max = max ?: return@let null
+            randomInt = runCatching {
+                val min = min ?: return@runCatching null
+                val max = max ?: return@runCatching null
 
                 getRandomIntUseCase(min = min, max = max)
-            },
+            }.getOrNull(),
         ) { event ->
             when (event) {
                 is GetRandomIntScreen.Event.MinChanged -> min = event.newValue.toIntOrNull()

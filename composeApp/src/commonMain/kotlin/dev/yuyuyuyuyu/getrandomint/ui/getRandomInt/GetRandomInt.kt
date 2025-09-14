@@ -31,5 +31,8 @@ fun GetRandomInt(state: GetRandomIntScreen.State, modifier: Modifier = Modifier)
 
     Text(text = state.randomInt?.toString() ?: "")
 
-    CopyToClipboardButton(textToCopy = state.randomInt?.toString() ?: "")
+    CopyToClipboardButton(
+        textToCopy = state.randomInt?.toString() ?: "",
+        enabled = state.randomInt != null,
+    )
 }
