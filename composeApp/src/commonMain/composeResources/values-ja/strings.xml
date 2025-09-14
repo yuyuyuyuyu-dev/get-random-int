@@ -1,0 +1,6 @@
+<resources>
+    <string name="app_name">乱数の生成</string>
+    <string name="open_source_licenses">オープンソース ライセンス</string>
+    <string name="copy_to_clipboard">クリップボードへコピー</string>
+    <string name="copied_to_clipboard">クリップボードへコピーしました</string>
+</resources>
