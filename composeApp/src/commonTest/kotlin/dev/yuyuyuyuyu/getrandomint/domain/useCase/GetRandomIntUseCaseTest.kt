@@ -1,6 +1,8 @@
 package dev.yuyuyuyuyu.getrandomint.domain.useCase
 
 import kotlin.test.Test
+import kotlin.test.assertEquals
+import kotlin.test.assertFailsWith
 import kotlin.test.assertTrue
 
 class GetRandomIntUseCaseTest {
@@ -46,5 +48,22 @@ class GetRandomIntUseCaseTest {
 
         // Assert
         assertTrue(actual.all { it in min..max })
+    }
+
+    @Test
+    fun `invoke() should return error when min is greater than max`() {
+        // Arrange
+        val min = 10
+        val max = 5
+        val expected = "Cannot get random in empty range: 10..5"
+
+        // Act
+        val actual = assertFailsWith<NoSuchElementException> {
+            getRandomIntUseCase(min, max)
+        }
+            .message
+
+        // Assert
+        assertEquals(expected, actual)
     }
 }
