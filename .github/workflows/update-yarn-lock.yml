@@ -1,0 +1,68 @@
+name: Update Yarn Lock
+
+on:
+  schedule:
+    # Dependabot bumps Kotlin daily, and every bump can invalidate the lock file,
+    # so this runs on the same cadence.
+    - cron: '0 3 * * *'
+  workflow_dispatch:
+
+# Two runs pushing the same branch would race, so let a second one wait instead.
+concurrency:
+  group: update-yarn-lock
+
+jobs:
+  update-yarn-lock:
+    name: Update Yarn Lock
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Create a token
+        id: app-token
+        uses: actions/create-github-app-token@v3
+        with:
+          client-id: ${{ vars.PR_BOT_CLIENT_ID }}
+          private-key: ${{ secrets.PR_BOT_PRIVATE_KEY }}
+
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Setup JDK
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'jetbrains'
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Regenerate the lock file
+        # Removing the lock file first makes Yarn resolve every version range again.
+        # Keeping it would only add and drop the entries the Kotlin plugin asked for.
+        run: |
+          rm kotlin-js-store/wasm/yarn.lock
+          ./gradlew kotlinWasmUpgradeYarnLock
+
+      - name: Build
+        # The task above only installs the packages. Bundling is what proves the newly
+        # resolved versions still work, and the Tests workflow only covers the JVM target.
+        run: ./gradlew :composeApp:wasmJsBrowserDistribution
+
+      - name: Create a pull request
+        uses: peter-evans/create-pull-request@v8
+        with:
+          # A pull request opened with GITHUB_TOKEN does not start the Tests workflow.
+          token: ${{ steps.app-token.outputs.token }}
+          # Attributes the commit to the app instead of to github-actions[bot].
+          sign-commits: true
+          add-paths: kotlin-js-store/wasm/yarn.lock
+          branch: chore/update-yarn-lock
+          delete-branch: true
+          commit-message: 'chore(deps): update yarn.lock for the Wasm target'
+          title: 'chore(deps): update yarn.lock for the Wasm target'
+          body: |
+            `kotlin-js-store/wasm/yarn.lock` was regenerated from scratch by the
+            `kotlinWasmUpgradeYarnLock` task, so every version range was resolved again.
+
+            `:composeApp:wasmJsBrowserDistribution` succeeded with these versions.
