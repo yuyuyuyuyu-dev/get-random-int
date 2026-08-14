@@ -1,0 +1,34 @@
+version: 2
+
+updates:
+  - package-ecosystem: gradle
+    # Every version is declared in the root version catalog, so no other directory holds
+    # a version that Dependabot could bump.
+    directory: /
+    schedule:
+      interval: weekly
+    commit-message:
+      prefix: chore
+      include: scope
+    groups:
+      # The Compose compiler plugin is released per Kotlin version, and each Compose
+      # Multiplatform release targets a specific Kotlin version. Splitting these across
+      # separate pull requests would produce combinations that fail to build.
+      kotlin:
+        patterns:
+          - org.jetbrains.kotlin*
+          - org.jetbrains.compose*
+
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+    commit-message:
+      prefix: ci
+      include: scope
+    groups:
+      # Action bumps do not interact with one another, so a single pull request per week
+      # keeps the review load down.
+      actions:
+        patterns:
+          - "*"
