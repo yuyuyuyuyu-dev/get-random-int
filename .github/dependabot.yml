@@ -7,6 +7,8 @@ updates:
     directory: /
     schedule:
       interval: daily
+    # A pull request only merges once it carries the latest main, so a second open
+    # one would always have to be rebased after the first one lands.
     open-pull-requests-limit: 1
     groups:
       # The Compose compiler plugin is released per Kotlin version, and each Compose
