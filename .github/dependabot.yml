@@ -7,15 +7,25 @@ updates:
     directory: /
     schedule:
       interval: daily
+    # A pull request only merges once it carries the latest main, so a second open
+    # one would always have to be rebased after the first one lands.
     open-pull-requests-limit: 1
     groups:
       # The Compose compiler plugin is released per Kotlin version, and each Compose
       # Multiplatform release targets a specific Kotlin version. Splitting these across
-      # separate pull requests would produce combinations that fail to build.
+      # separate pull requests would produce combinations that fail to build. This group
+      # comes first because a dependency joins the first group it matches, and a major
+      # bump of one of these still has to travel with the rest.
       kotlin:
         patterns:
           - org.jetbrains.kotlin*
           - org.jetbrains.compose*
+      # Minor and patch bumps are merged automatically, so batching them costs no review
+      # time. Major bumps stay out so that each one is opened and read on its own.
+      minor-and-patch:
+        update-types:
+          - minor
+          - patch
 
   - package-ecosystem: github-actions
     directory: /
@@ -23,8 +33,7 @@ updates:
       interval: daily
     open-pull-requests-limit: 1
     groups:
-      # Action bumps do not interact with one another, so batching them into one pull
-      # request keeps the review load down.
-      actions:
-        patterns:
-          - "*"
+      minor-and-patch:
+        update-types:
+          - minor
+          - patch
