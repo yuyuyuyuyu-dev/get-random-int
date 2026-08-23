@@ -1,0 +1,36 @@
+name: Auto-merge
+
+on:
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  auto-merge:
+    name: Auto-merge
+    if: github.actor == 'dependabot[bot]'
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: read
+    steps:
+      - name: Create a token
+        # A Dependabot event hands the workflow a read-only GITHUB_TOKEN, so merging
+        # needs a token of its own. Such an event also reads secrets from the Dependabot
+        # store instead of the Actions one, so PR_BOT_PRIVATE_KEY has to exist there too.
+        id: app-token
+        uses: actions/create-github-app-token@v3
+        with:
+          client-id: ${{ vars.PR_BOT_CLIENT_ID }}
+          private-key: ${{ secrets.PR_BOT_PRIVATE_KEY }}
+
+      - name: Read the update type
+        id: metadata
+        uses: dependabot/fetch-metadata@v2
+
+      - name: Enable auto-merge
+        # A grouped pull request reports the largest update type it carries, so a group
+        # that happens to contain a major bump is left alone.
+        if: contains(fromJSON('["version-update:semver-minor", "version-update:semver-patch"]'), steps.metadata.outputs.update-type)
+        run: gh pr merge --auto --squash "$PR_URL"
+        env:
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
+          PR_URL: ${{ github.event.pull_request.html_url }}
