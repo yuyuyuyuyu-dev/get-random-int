@@ -11,15 +11,19 @@ updates:
     # one would always have to be rebased after the first one lands.
     open-pull-requests-limit: 1
     groups:
-      # The Compose compiler plugin is released per Kotlin version, and each Compose
-      # Multiplatform release targets a specific Kotlin version. Splitting these across
-      # separate pull requests would produce combinations that fail to build. This group
-      # comes first because a dependency joins the first group it matches, and a major
-      # bump of one of these still has to travel with the rest.
+      # Compose Multiplatform names a minimum Kotlin version for the Wasm target, so a
+      # pull request that moves one without the other can fail to build. Minor and patch
+      # bumps would already share the group below, so what this group adds is the day one
+      # of these is a major bump and the rest are not. It comes first because a dependency
+      # joins the first group it matches.
       kotlin:
         patterns:
           - org.jetbrains.kotlin*
           - org.jetbrains.compose*
+        # org.jetbrains.kotlinx matches the pattern above by prefix, but coroutines
+        # follow a release line of their own.
+        exclude-patterns:
+          - org.jetbrains.kotlinx*
       # Minor and patch bumps are merged automatically, so batching them costs no review
       # time. Major bumps stay out so that each one is opened and read on its own.
       minor-and-patch:
