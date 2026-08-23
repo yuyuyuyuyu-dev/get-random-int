@@ -24,7 +24,7 @@ jobs:
 
       - name: Read the update type
         id: metadata
-        uses: dependabot/fetch-metadata@v2
+        uses: dependabot/fetch-metadata@v3
 
       - name: Enable auto-merge
         # A grouped pull request reports the largest update type it carries, so a group
