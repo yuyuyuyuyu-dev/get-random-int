@@ -6,7 +6,7 @@ kotlin = "2.4.20"
 kotlinx-coroutines = "1.11.0"
 
 koin-bom = "4.2.2"
-circuit = "0.38.0"
+circuit = "0.39.0"
 aboutLibraries = "15.2.0"
 
 myMaterialTheme = "0.4.0"
