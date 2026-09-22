@@ -1,5 +1,4 @@
 version: 2
-
 updates:
   - package-ecosystem: gradle
     # Every version is declared in the root version catalog, so no other directory holds
@@ -30,7 +29,6 @@ updates:
         update-types:
           - minor
           - patch
-
   - package-ecosystem: github-actions
     directory: /
     schedule:
