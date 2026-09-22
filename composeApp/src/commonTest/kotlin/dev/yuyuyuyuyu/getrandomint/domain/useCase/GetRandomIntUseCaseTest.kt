@@ -58,10 +58,10 @@ class GetRandomIntUseCaseTest {
         val expected = "Cannot get random in empty range: 10..5"
 
         // Act
-        val actual = assertFailsWith<NoSuchElementException> {
-            getRandomIntUseCase(min, max)
-        }
-            .message
+        val actual =
+            assertFailsWith<NoSuchElementException> {
+                getRandomIntUseCase(min, max)
+            }.message
 
         // Assert
         assertEquals(expected, actual)

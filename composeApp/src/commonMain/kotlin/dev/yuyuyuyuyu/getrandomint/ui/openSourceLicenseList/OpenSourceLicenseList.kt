@@ -15,9 +15,10 @@ fun OpenSourceLicenseList(modifier: Modifier = Modifier) {
     }
 
     LibrariesContainer(
-        libraries = libraries?.libraries?.distinctBy { it.name }?.let {
-            libraries?.copy(libraries = it)
-        },
+        libraries =
+            libraries?.libraries?.distinctBy { it.name }?.let {
+                libraries?.copy(libraries = it)
+            },
         modifier = modifier,
         badges = LibraryBadges(description = true),
     )

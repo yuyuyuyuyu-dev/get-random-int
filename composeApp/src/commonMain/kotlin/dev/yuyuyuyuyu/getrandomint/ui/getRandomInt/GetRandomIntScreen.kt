@@ -13,7 +13,12 @@ data object GetRandomIntScreen : Screen {
     ) : CircuitUiState
 
     sealed class Event : CircuitUiEvent {
-        data class MinChanged(val newValue: String) : Event()
-        data class MaxChanged(val newValue: String) : Event()
+        data class MinChanged(
+            val newValue: String,
+        ) : Event()
+
+        data class MaxChanged(
+            val newValue: String,
+        ) : Event()
     }
 }
