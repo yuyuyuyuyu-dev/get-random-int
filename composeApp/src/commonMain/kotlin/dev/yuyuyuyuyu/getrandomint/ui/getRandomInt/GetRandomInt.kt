@@ -12,7 +12,10 @@ import androidx.compose.ui.unit.dp
 import dev.yuyuyuyuyu.getrandomint.ui.components.CopyToClipboardButton
 
 @Composable
-fun GetRandomInt(state: GetRandomIntScreen.State, modifier: Modifier = Modifier) = Column(
+fun GetRandomInt(
+    state: GetRandomIntScreen.State,
+    modifier: Modifier = Modifier,
+) = Column(
     modifier = modifier.fillMaxSize(),
     verticalArrangement = Arrangement.spacedBy(32.dp, Alignment.CenterVertically),
     horizontalAlignment = Alignment.CenterHorizontally,

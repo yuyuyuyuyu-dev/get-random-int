@@ -1,9 +1,7 @@
 name: Auto-merge
-
 on:
   pull_request:
-    branches: [ "main" ]
-
+    branches: ["main"]
 jobs:
   auto-merge:
     name: Auto-merge
@@ -17,15 +15,13 @@ jobs:
         # needs a token of its own. Such an event also reads secrets from the Dependabot
         # store instead of the Actions one, so PR_BOT_PRIVATE_KEY has to exist there too.
         id: app-token
-        uses: actions/create-github-app-token@v3
+        uses: actions/create-github-app-token@v3.2.0
         with:
           client-id: ${{ vars.PR_BOT_CLIENT_ID }}
           private-key: ${{ secrets.PR_BOT_PRIVATE_KEY }}
-
       - name: Read the update type
         id: metadata
         uses: dependabot/fetch-metadata@v3
-
       - name: Enable auto-merge
         # A grouped pull request reports the largest update type it carries, so a group
         # that happens to contain a major bump is left alone.

@@ -1,0 +1,118 @@
+name: CI
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+jobs:
+  detekt:
+    name: Detekt
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+      - name: Setup JDK
+        uses: actions/setup-java@v6
+        with:
+          java-version: '21'
+          distribution: 'jetbrains'
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v6
+      - name: Run Detekt
+        run: ./gradlew detekt
+  ktlint:
+    name: ktlint
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+      - name: Setup JDK
+        uses: actions/setup-java@v6
+        with:
+          java-version: '21'
+          distribution: 'jetbrains'
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v6
+      - name: Run ktlint
+        run: ./gradlew ktlintCheck
+  version-catalog:
+    name: Version Catalog
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+      - name: Setup JDK
+        uses: actions/setup-java@v6
+        with:
+          java-version: '21'
+          distribution: 'jetbrains'
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v6
+      - name: Format the version catalog
+        run: ./gradlew versionCatalogFormat
+      - name: Check the version catalog is formatted
+        run: git diff --exit-code gradle/libs.versions.toml
+  actionlint:
+    name: actionlint
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+      - name: Run actionlint
+        uses: raven-actions/actionlint@v2
+  yamlfmt:
+    name: yamlfmt
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+      - name: Run yamlfmt
+        uses: docker://ghcr.io/google/yamlfmt:0.21.0
+        with:
+          args: -lint .
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+      - name: Setup JDK
+        uses: actions/setup-java@v6
+        with:
+          java-version: '21'
+          distribution: 'jetbrains'
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v6
+      - name: Run tests
+        run: ./gradlew allTests
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+      - name: Setup JDK
+        uses: actions/setup-java@v6
+        with:
+          java-version: '21'
+          distribution: 'jetbrains'
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v6
+      - name: Export Library Definitions
+        run: ./gradlew :composeApp:exportLibraryDefinitions -PaboutLibraries.exportPath=src/commonMain/composeResources/files/
+      - name: Build
+        run: ./gradlew :composeApp:wasmJsBrowserDistribution
