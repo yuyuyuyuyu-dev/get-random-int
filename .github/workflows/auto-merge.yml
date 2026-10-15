@@ -15,7 +15,7 @@ jobs:
         # needs a token of its own. Such an event also reads secrets from the Dependabot
         # store instead of the Actions one, so PR_BOT_PRIVATE_KEY has to exist there too.
         id: app-token
-        uses: actions/create-github-app-token@v3.2.0
+        uses: actions/create-github-app-token@v3.3.0
         with:
           client-id: ${{ vars.PR_BOT_CLIENT_ID }}
           private-key: ${{ secrets.PR_BOT_PRIVATE_KEY }}
