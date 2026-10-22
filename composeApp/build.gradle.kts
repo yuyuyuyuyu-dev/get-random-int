@@ -69,6 +69,22 @@ kotlin {
     }
 }
 
+aboutLibraries {
+    export {
+        outputFile = file("src/commonMain/composeResources/files/aboutlibraries.json")
+    }
+}
+
+compose.resources {
+    customDirectory(
+        sourceSetName = "commonMain",
+        directoryProvider =
+            tasks
+                .named("exportLibraryDefinitions")
+                .map { layout.projectDirectory.dir("src/commonMain/composeResources") },
+    )
+}
+
 compose.desktop {
     application {
         mainClass = "dev.yuyuyuyuyu.getrandomint.MainKt"
