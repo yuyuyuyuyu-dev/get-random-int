@@ -4,60 +4,23 @@ on:
     branches: ["main"]
   pull_request:
     branches: ["main"]
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+permissions: {}
 jobs:
-  detekt:
-    name: Detekt
-    runs-on: ubuntu-latest
+  oxfmt:
+    name: Oxfmt
     permissions:
       contents: read
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v7
-      - name: Setup JDK
-        uses: actions/setup-java@v6
-        with:
-          java-version: '21'
-          distribution: 'jetbrains'
-      - name: Setup Gradle
-        uses: gradle/actions/setup-gradle@v6
-      - name: Run Detekt
-        run: ./gradlew detekt
-  ktlint:
-    name: ktlint
-    runs-on: ubuntu-latest
+    uses: yuyuyuyuyu-dev/repo-config/.github/workflows/oxfmt.yml@main
+  kotlin-lint:
+    name: Kotlin lint
     permissions:
       contents: read
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v7
-      - name: Setup JDK
-        uses: actions/setup-java@v6
-        with:
-          java-version: '21'
-          distribution: 'jetbrains'
-      - name: Setup Gradle
-        uses: gradle/actions/setup-gradle@v6
-      - name: Run ktlint
-        run: ./gradlew ktlintCheck
-  version-catalog:
-    name: Version Catalog
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v7
-      - name: Setup JDK
-        uses: actions/setup-java@v6
-        with:
-          java-version: '21'
-          distribution: 'jetbrains'
-      - name: Setup Gradle
-        uses: gradle/actions/setup-gradle@v6
-      - name: Format the version catalog
-        run: ./gradlew versionCatalogFormat
-      - name: Check the version catalog is formatted
-        run: git diff --exit-code gradle/libs.versions.toml
+    uses: yuyuyuyuyu-dev/repo-config/.github/workflows/kotlin-lint.yml@main
+    with:
+      compose-multiplatform: true
   actionlint:
     name: actionlint
     runs-on: ubuntu-latest
@@ -86,15 +49,14 @@ jobs:
     permissions:
       contents: read
     steps:
-      - name: Checkout
+      - name: Check out the repository
         uses: actions/checkout@v7
-      - name: Setup JDK
-        uses: actions/setup-java@v6
         with:
-          java-version: '21'
-          distribution: 'jetbrains'
-      - name: Setup Gradle
-        uses: gradle/actions/setup-gradle@v6
+          persist-credentials: false
+      - name: Set up the JDK and Gradle
+        uses: yuyuyuyuyu-dev/repo-config/.github/actions/setup-jdk-and-gradle@main
+        with:
+          compose-multiplatform: true
       - name: Run tests
         run: ./gradlew allTests
   build:
@@ -103,16 +65,13 @@ jobs:
     permissions:
       contents: read
     steps:
-      - name: Checkout
+      - name: Check out the repository
         uses: actions/checkout@v7
-      - name: Setup JDK
-        uses: actions/setup-java@v6
         with:
-          java-version: '21'
-          distribution: 'jetbrains'
-      - name: Setup Gradle
-        uses: gradle/actions/setup-gradle@v6
-      - name: Export Library Definitions
-        run: ./gradlew :composeApp:exportLibraryDefinitions -PaboutLibraries.exportPath=src/commonMain/composeResources/files/
+          persist-credentials: false
+      - name: Set up the JDK and Gradle
+        uses: yuyuyuyuyu-dev/repo-config/.github/actions/setup-jdk-and-gradle@main
+        with:
+          compose-multiplatform: true
       - name: Build
         run: ./gradlew :composeApp:wasmJsBrowserDistribution

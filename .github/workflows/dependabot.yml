@@ -16,7 +16,7 @@ jobs:
       - name: Setup JDK
         uses: actions/setup-java@v6
         with:
-          java-version: '21'
-          distribution: 'jetbrains'
+          java-version: "21"
+          distribution: "jetbrains"
       - name: Send dependencies to Dependabot
         uses: gradle/actions/dependency-submission@v6
