@@ -10,6 +10,7 @@ koin-bom = "4.2.2"
 kotlin = "2.4.21"
 kotlinx-coroutines = "1.11.0"
 ktlint = "14.2.0"
+ktlintCli = "1.8.0"
 myMaterialTheme = "0.4.0"
 simpleTopAppBar = "0.4.0"
 versionCatalogUpdate = "1.1.1"
@@ -25,6 +26,7 @@ koin-compose-viewmodel = { module = "io.insert-koin:koin-compose-viewmodel" }
 koin-compose-viewmodel-navigation = { module = "io.insert-koin:koin-compose-viewmodel-navigation" }
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
 kotlinx-coroutinesSwing = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-swing", version.ref = "kotlinx-coroutines" }
+ktlint-cli = { module = "com.pinterest.ktlint:ktlint-cli", version.ref = "ktlintCli" }
 yuyuyuyuyu-myMaterialTheme = { module = "dev.yuyuyuyuyu:mymaterialtheme", version.ref = "myMaterialTheme" }
 yuyuyuyuyu-simpleTopAppBar = { module = "dev.yuyuyuyuyu:simpletopappbar", version.ref = "simpleTopAppBar" }
 
