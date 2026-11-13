@@ -9,11 +9,11 @@ concurrency:
   cancel-in-progress: true
 permissions: {}
 jobs:
-  oxfmt:
-    name: Oxfmt
+  biome:
+    name: Biome
     permissions:
       contents: read
-    uses: yuyuyuyuyu-dev/repo-config/.github/workflows/oxfmt.yml@main
+    uses: yuyuyuyuyu-dev/repo-config/.github/workflows/biome.yml@main
   kotlin-lint:
     name: Kotlin lint
     permissions:
