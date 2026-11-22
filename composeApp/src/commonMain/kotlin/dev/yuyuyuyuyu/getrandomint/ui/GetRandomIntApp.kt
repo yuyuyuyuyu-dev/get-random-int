@@ -28,10 +28,6 @@ import org.koin.compose.koinInject
 @Composable
 @Preview
 fun GetRandomIntApp() {
-    val backStack = rememberSaveableBackStack(root = GetRandomIntScreen)
-    val navigator = rememberCircuitNavigator(backStack) {}
-    val currentScreen = backStack.topRecord?.screen
-
     val focusManager = LocalFocusManager.current
     val uriHandler = LocalUriHandler.current
 
@@ -41,33 +37,37 @@ fun GetRandomIntApp() {
             modules(uiModule, domainModule)
         },
     ) {
-        MyMaterialTheme {
-            Scaffold(
-                modifier =
-                    Modifier.clickable(
-                        interactionSource = null,
-                        indication = null,
-                        onClick = { focusManager.clearFocus() },
-                    ),
-                topBar = {
-                    SimpleTopAppBar(
-                        title =
-                            when (currentScreen) {
-                                is OpenSourceLicenseListScreen -> stringResource(Res.string.open_source_licenses)
-                                else -> stringResource(Res.string.app_name)
+        CircuitCompositionLocals(circuit = koinInject()) {
+            val backStack = rememberSaveableBackStack(root = GetRandomIntScreen)
+            val navigator = rememberCircuitNavigator(backStack) {}
+            val currentScreen = backStack.topRecord?.screen
+
+            MyMaterialTheme {
+                Scaffold(
+                    modifier =
+                        Modifier.clickable(
+                            interactionSource = null,
+                            indication = null,
+                            onClick = { focusManager.clearFocus() },
+                        ),
+                    topBar = {
+                        SimpleTopAppBar(
+                            title =
+                                when (currentScreen) {
+                                    is OpenSourceLicenseListScreen -> stringResource(Res.string.open_source_licenses)
+                                    else -> stringResource(Res.string.app_name)
+                                },
+                            navigateBackIsPossible = backStack.size > 1,
+                            onNavigateBackButtonClick = { navigator.pop() },
+                            onOpenSourceLicensesButtonClick = {
+                                navigator.goTo(OpenSourceLicenseListScreen)
                             },
-                        navigateBackIsPossible = backStack.size > 1,
-                        onNavigateBackButtonClick = { navigator.pop() },
-                        onOpenSourceLicensesButtonClick = {
-                            navigator.goTo(OpenSourceLicenseListScreen)
-                        },
-                        onSourceCodeButtonClick = {
-                            uriHandler.openUri("https://github.com/yuyuyuyuyu-dev/get-random-int")
-                        },
-                    )
-                },
-            ) { paddingValues ->
-                CircuitCompositionLocals(circuit = koinInject()) {
+                            onSourceCodeButtonClick = {
+                                uriHandler.openUri("https://github.com/yuyuyuyuyu-dev/get-random-int")
+                            },
+                        )
+                    },
+                ) { paddingValues ->
                     NavigableCircuitContent(
                         navigator = navigator,
                         backStack = backStack,
