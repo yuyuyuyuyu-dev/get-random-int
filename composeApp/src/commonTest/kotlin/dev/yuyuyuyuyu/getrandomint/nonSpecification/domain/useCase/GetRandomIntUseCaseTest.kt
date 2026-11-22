@@ -1,5 +1,6 @@
-package dev.yuyuyuyuyu.getrandomint.domain.useCase
+package dev.yuyuyuyuyu.getrandomint.nonSpecification.domain.useCase
 
+import dev.yuyuyuyuyu.getrandomint.domain.useCase.GetRandomIntUseCase
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
