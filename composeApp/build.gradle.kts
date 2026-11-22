@@ -5,7 +5,6 @@ plugins {
     alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.composeCompiler)
-    alias(libs.plugins.kotlinSerialization)
 
     alias(libs.plugins.aboutLibraries)
     alias(libs.plugins.yuyuyuyuyu.composePwa)
@@ -66,7 +65,6 @@ kotlin {
             implementation(libs.androidx.lifecycle.runtimeCompose)
             implementation(libs.androidx.lifecycle.viewmodelNavigation3)
             implementation(libs.androidx.navigation3.ui)
-            implementation(libs.kotlinx.serialization.core)
 
             implementation(project.dependencies.platform(libs.koin.bom))
             implementation(libs.koin.compose)

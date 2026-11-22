@@ -4,16 +4,16 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDecorator
 import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.entryProvider
-import androidx.navigation3.runtime.rememberNavBackStack
 import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
 import androidx.navigation3.ui.NavDisplay
-import androidx.savedstate.serialization.SavedStateConfiguration
 import dev.yuyuyuyuyu.getrandomint.di.domainModule
 import dev.yuyuyuyuyu.getrandomint.di.uiModule
 import dev.yuyuyuyuyu.getrandomint.ui.getRandomInt.GetRandomInt
@@ -25,23 +25,9 @@ import dev.yuyuyuyuyu.simpleTopAppBar.SimpleTopAppBar
 import getrandomint.composeapp.generated.resources.Res
 import getrandomint.composeapp.generated.resources.app_name
 import getrandomint.composeapp.generated.resources.open_source_licenses
-import kotlinx.serialization.modules.SerializersModule
-import kotlinx.serialization.modules.polymorphic
-import kotlinx.serialization.modules.subclass
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.KoinApplication
-
-private val navBackStackConfiguration =
-    SavedStateConfiguration {
-        serializersModule =
-            SerializersModule {
-                polymorphic(NavKey::class) {
-                    subclass(GetRandomIntRoute::class)
-                    subclass(OpenSourceLicenseListRoute::class)
-                }
-            }
-    }
 
 @Composable
 @Preview
@@ -49,7 +35,7 @@ fun GetRandomIntApp() {
     val focusManager = LocalFocusManager.current
     val uriHandler = LocalUriHandler.current
 
-    val backStack = rememberNavBackStack(navBackStackConfiguration, GetRandomIntRoute)
+    val backStack = remember { mutableStateListOf<NavKey>(GetRandomIntRoute) }
 
     KoinApplication(
         application = {
