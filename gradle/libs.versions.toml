@@ -1,7 +1,6 @@
 [versions]
 aboutLibraries = "15.3.0"
 androidx-lifecycle = "2.11.0"
-circuit = "0.39.0"
 composeMultiplatform = "1.12.2"
 composePwa = "0.7.0"
 detekt = "1.23.8"
@@ -10,6 +9,7 @@ kotlin = "2.4.21"
 ktlint = "14.2.0"
 ktlintCli = "1.8.0"
 myMaterialTheme = "0.4.0"
+navigation3 = "1.2.0-rc01"
 simpleTopAppBar = "0.4.0"
 versionCatalogUpdate = "1.1.2"
 
@@ -17,11 +17,11 @@ versionCatalogUpdate = "1.1.2"
 aboutlibraries-compose-m3 = { module = "com.mikepenz:aboutlibraries-compose-m3", version.ref = "aboutLibraries" }
 androidx-lifecycle-runtimeCompose = { module = "org.jetbrains.androidx.lifecycle:lifecycle-runtime-compose", version.ref = "androidx-lifecycle" }
 androidx-lifecycle-viewmodelCompose = { module = "org.jetbrains.androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "androidx-lifecycle" }
-circuit = { module = "com.slack.circuit:circuit-foundation", version.ref = "circuit" }
+androidx-lifecycle-viewmodelNavigation3 = { module = "org.jetbrains.androidx.lifecycle:lifecycle-viewmodel-navigation3", version.ref = "androidx-lifecycle" }
+androidx-navigation3-ui = { module = "org.jetbrains.androidx.navigation3:navigation3-ui", version.ref = "navigation3" }
 koin-bom = { module = "io.insert-koin:koin-bom", version.ref = "koin-bom" }
 koin-compose = { module = "io.insert-koin:koin-compose" }
 koin-compose-viewmodel = { module = "io.insert-koin:koin-compose-viewmodel" }
-koin-compose-viewmodel-navigation = { module = "io.insert-koin:koin-compose-viewmodel-navigation" }
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
 ktlint-cli = { module = "com.pinterest.ktlint:ktlint-cli", version.ref = "ktlintCli" }
 yuyuyuyuyu-myMaterialTheme = { module = "dev.yuyuyuyuyu:mymaterialtheme", version.ref = "myMaterialTheme" }
