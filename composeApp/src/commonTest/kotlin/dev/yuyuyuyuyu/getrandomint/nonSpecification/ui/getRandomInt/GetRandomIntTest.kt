@@ -33,7 +33,7 @@ class GetRandomIntTest {
             waitForIdle()
 
             // Assert
-            onNode(isGeneratedInt, useUnmergedTree = true).assertDoesNotExist()
+            onNode(isGeneratedInt).assertDoesNotExist()
             onNodeWithText(getString(Res.string.copy_to_clipboard)).assertIsNotEnabled()
         }
 
@@ -47,7 +47,7 @@ class GetRandomIntTest {
             onNodeWithText("Min").performTextInput("1")
 
             // Assert
-            onNode(isGeneratedInt, useUnmergedTree = true).assertDoesNotExist()
+            onNode(isGeneratedInt).assertDoesNotExist()
             onNodeWithText(getString(Res.string.copy_to_clipboard)).assertIsNotEnabled()
         }
 
@@ -61,7 +61,7 @@ class GetRandomIntTest {
             onNodeWithText("Max").performTextInput("10")
 
             // Assert
-            onNode(isGeneratedInt, useUnmergedTree = true).assertDoesNotExist()
+            onNode(isGeneratedInt).assertDoesNotExist()
             onNodeWithText(getString(Res.string.copy_to_clipboard)).assertIsNotEnabled()
         }
 
@@ -76,7 +76,7 @@ class GetRandomIntTest {
             onNodeWithText("Max").performTextInput("5")
 
             // Assert
-            onNode(isGeneratedInt, useUnmergedTree = true).assertDoesNotExist()
+            onNode(isGeneratedInt).assertDoesNotExist()
             onNodeWithText(getString(Res.string.copy_to_clipboard)).assertIsNotEnabled()
         }
 
@@ -106,7 +106,7 @@ class GetRandomIntTest {
             onNodeWithText("Max").performTextInput(Int.MAX_VALUE.toString())
 
             // Assert
-            onNode(isGeneratedInt, useUnmergedTree = true).assertExists()
+            onNode(isGeneratedInt).assertExists()
         }
 
     @Test
@@ -122,6 +122,20 @@ class GetRandomIntTest {
 
             // Assert
             assertTrue(generatedInt() in range)
+        }
+
+    @Test
+    fun `should expose the generated int to accessibility services on its own`() =
+        runComposeUiTest {
+            // Arrange
+            setContent { GetRandomIntApp() }
+
+            // Act
+            onNodeWithText("Min").performTextInput("1")
+            onNodeWithText("Max").performTextInput("100")
+
+            // Assert
+            onNode(isGeneratedInt).assertExists()
         }
 
     @Test
@@ -172,7 +186,7 @@ class GetRandomIntTest {
         }
 
     private fun ComposeUiTest.generatedInt(): Int =
-        onNode(isGeneratedInt, useUnmergedTree = true)
+        onNode(isGeneratedInt)
             .fetchSemanticsNode()
             .config[SemanticsProperties.Text]
             .single()

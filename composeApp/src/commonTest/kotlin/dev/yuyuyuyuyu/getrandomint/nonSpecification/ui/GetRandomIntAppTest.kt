@@ -1,15 +1,21 @@
 package dev.yuyuyuyuyu.getrandomint.nonSpecification.ui
 
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.platform.UriHandler
 import androidx.compose.ui.test.ComposeUiTest
 import androidx.compose.ui.test.ExperimentalTestApi
 import androidx.compose.ui.test.SemanticsMatcher
+import androidx.compose.ui.test.assertIsFocused
+import androidx.compose.ui.test.assertIsNotFocused
+import androidx.compose.ui.test.click
 import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithText
+import androidx.compose.ui.test.onRoot
 import androidx.compose.ui.test.performClick
+import androidx.compose.ui.test.performTouchInput
 import androidx.compose.ui.test.v2.runComposeUiTest
 import dev.yuyuyuyuyu.getrandomint.ui.GetRandomIntApp
 import getrandomint.composeapp.generated.resources.Res
@@ -86,6 +92,33 @@ class GetRandomIntAppTest {
 
             // Assert
             assertEquals(listOf("https://github.com/yuyuyuyuyu-dev/get-random-int"), openedUris)
+        }
+
+    @Test
+    fun `should clear the focus when the outside of the text fields is tapped`() =
+        runComposeUiTest {
+            // Arrange
+            setContent { GetRandomIntApp() }
+            onNodeWithText("Min").performClick()
+
+            // Act
+            onRoot().performTouchInput { click(bottomCenter - Offset(0f, 1f)) }
+
+            // Assert
+            onNodeWithText("Min").assertIsNotFocused()
+        }
+
+    @Test
+    fun `should keep the focus when a text field is tapped`() =
+        runComposeUiTest {
+            // Arrange
+            setContent { GetRandomIntApp() }
+
+            // Act
+            onNodeWithText("Min").performClick()
+
+            // Assert
+            onNodeWithText("Min").assertIsFocused()
         }
 
     private suspend fun ComposeUiTest.awaitExactlyOne(matcher: SemanticsMatcher) =
