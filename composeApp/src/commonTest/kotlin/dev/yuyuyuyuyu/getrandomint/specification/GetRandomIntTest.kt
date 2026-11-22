@@ -1,5 +1,6 @@
 package dev.yuyuyuyuyu.getrandomint.specification
 
+import androidx.compose.ui.test.ComposeUiTest
 import androidx.compose.ui.test.ExperimentalTestApi
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
@@ -8,6 +9,8 @@ import androidx.compose.ui.test.v2.runComposeUiTest
 import dev.yuyuyuyuyu.getrandomint.ui.GetRandomIntApp
 import getrandomint.composeapp.generated.resources.Res
 import getrandomint.composeapp.generated.resources.copy_to_clipboard
+import org.jetbrains.compose.resources.ExperimentalResourceApi
+import org.jetbrains.compose.resources.awaitPendingResourceStateLoads
 import org.jetbrains.compose.resources.getString
 import kotlin.test.Test
 import kotlin.test.assertNotNull
@@ -22,6 +25,7 @@ class GetRandomIntTest {
             val dynamicPorts = 49152..65535
             replaceClipboardWithFake()
             setContent { GetRandomIntApp() }
+            awaitResourceLoads()
 
             try {
                 // Act
@@ -37,6 +41,13 @@ class GetRandomIntTest {
                 restoreClipboard()
             }
         }
+
+    @OptIn(ExperimentalResourceApi::class)
+    private suspend fun ComposeUiTest.awaitResourceLoads() {
+        waitForIdle()
+        awaitPendingResourceStateLoads()
+        waitForIdle()
+    }
 }
 
 @JsFun(

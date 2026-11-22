@@ -16,6 +16,8 @@ import androidx.compose.ui.text.AnnotatedString
 import dev.yuyuyuyuyu.getrandomint.ui.GetRandomIntApp
 import getrandomint.composeapp.generated.resources.Res
 import getrandomint.composeapp.generated.resources.copy_to_clipboard
+import org.jetbrains.compose.resources.ExperimentalResourceApi
+import org.jetbrains.compose.resources.awaitPendingResourceStateLoads
 import org.jetbrains.compose.resources.getString
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -30,7 +32,7 @@ class GetRandomIntTest {
             setContent { GetRandomIntApp() }
 
             // Act
-            waitForIdle()
+            awaitResourceLoads()
 
             // Assert
             onNode(isGeneratedInt).assertDoesNotExist()
@@ -42,6 +44,7 @@ class GetRandomIntTest {
         runComposeUiTest {
             // Arrange
             setContent { GetRandomIntApp() }
+            awaitResourceLoads()
 
             // Act
             onNodeWithText("Min").performTextInput("1")
@@ -56,6 +59,7 @@ class GetRandomIntTest {
         runComposeUiTest {
             // Arrange
             setContent { GetRandomIntApp() }
+            awaitResourceLoads()
 
             // Act
             onNodeWithText("Max").performTextInput("10")
@@ -70,6 +74,7 @@ class GetRandomIntTest {
         runComposeUiTest {
             // Arrange
             setContent { GetRandomIntApp() }
+            awaitResourceLoads()
 
             // Act
             onNodeWithText("Min").performTextInput("10")
@@ -85,6 +90,7 @@ class GetRandomIntTest {
         runComposeUiTest {
             // Arrange
             setContent { GetRandomIntApp() }
+            awaitResourceLoads()
 
             // Act
             onNodeWithText("Min").performTextInput("7")
@@ -100,6 +106,7 @@ class GetRandomIntTest {
         runComposeUiTest {
             // Arrange
             setContent { GetRandomIntApp() }
+            awaitResourceLoads()
 
             // Act
             onNodeWithText("Min").performTextInput(Int.MIN_VALUE.toString())
@@ -115,6 +122,7 @@ class GetRandomIntTest {
             // Arrange
             val range = -20..-11
             setContent { GetRandomIntApp() }
+            awaitResourceLoads()
 
             // Act
             onNodeWithText("Min").performTextInput(range.first.toString())
@@ -129,6 +137,7 @@ class GetRandomIntTest {
         runComposeUiTest {
             // Arrange
             setContent { GetRandomIntApp() }
+            awaitResourceLoads()
 
             // Act
             onNodeWithText("Min").performTextInput("1")
@@ -143,6 +152,7 @@ class GetRandomIntTest {
         runComposeUiTest {
             // Arrange
             setContent { GetRandomIntApp() }
+            awaitResourceLoads()
 
             // Act
             onNodeWithText("Min").performTextInput("abc")
@@ -156,6 +166,7 @@ class GetRandomIntTest {
         runComposeUiTest {
             // Arrange
             setContent { GetRandomIntApp() }
+            awaitResourceLoads()
 
             // Act
             onNodeWithText("Max").performTextInput("2147483648")
@@ -170,6 +181,7 @@ class GetRandomIntTest {
             // Arrange
             replaceClipboardWithFake()
             setContent { GetRandomIntApp() }
+            awaitResourceLoads()
             onNodeWithText("Min").performTextInput("1")
             onNodeWithText("Max").performTextInput("100")
             val expected = generatedInt().toString()
@@ -204,6 +216,13 @@ class GetRandomIntTest {
         }
 
     private val hasNoInput = SemanticsMatcher.expectValue(SemanticsProperties.EditableText, AnnotatedString(""))
+
+    @OptIn(ExperimentalResourceApi::class)
+    private suspend fun ComposeUiTest.awaitResourceLoads() {
+        waitForIdle()
+        awaitPendingResourceStateLoads()
+        waitForIdle()
+    }
 }
 
 @JsFun(

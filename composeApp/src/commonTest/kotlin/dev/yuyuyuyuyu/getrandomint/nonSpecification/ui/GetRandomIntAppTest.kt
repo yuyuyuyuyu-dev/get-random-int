@@ -6,7 +6,6 @@ import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.platform.UriHandler
 import androidx.compose.ui.test.ComposeUiTest
 import androidx.compose.ui.test.ExperimentalTestApi
-import androidx.compose.ui.test.SemanticsMatcher
 import androidx.compose.ui.test.assertIsFocused
 import androidx.compose.ui.test.assertIsNotFocused
 import androidx.compose.ui.test.click
@@ -21,15 +20,11 @@ import dev.yuyuyuyuyu.getrandomint.ui.GetRandomIntApp
 import getrandomint.composeapp.generated.resources.Res
 import getrandomint.composeapp.generated.resources.app_name
 import getrandomint.composeapp.generated.resources.open_source_licenses
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.withContext
-import kotlinx.coroutines.withTimeout
+import org.jetbrains.compose.resources.ExperimentalResourceApi
+import org.jetbrains.compose.resources.awaitPendingResourceStateLoads
 import org.jetbrains.compose.resources.getString
 import kotlin.test.Test
 import kotlin.test.assertEquals
-import kotlin.time.Duration.Companion.milliseconds
-import kotlin.time.Duration.Companion.seconds
 
 @OptIn(ExperimentalTestApi::class)
 class GetRandomIntAppTest {
@@ -41,7 +36,7 @@ class GetRandomIntAppTest {
 
             // Act
             onNodeWithContentDescription("menu").performClick()
-            awaitExactlyOne(hasText(getString(Res.string.open_source_licenses)))
+            awaitResourceLoads()
             onNodeWithText(getString(Res.string.open_source_licenses)).performClick()
 
             // Assert
@@ -55,14 +50,15 @@ class GetRandomIntAppTest {
             // Arrange
             setContent { GetRandomIntApp() }
             onNodeWithContentDescription("menu").performClick()
-            awaitExactlyOne(hasText(getString(Res.string.open_source_licenses)))
+            awaitResourceLoads()
             onNodeWithText(getString(Res.string.open_source_licenses)).performClick()
 
             // Act
             onNodeWithContentDescription("navigate back").performClick()
 
             // Assert
-            awaitExactlyOne(hasText(getString(Res.string.app_name)))
+            awaitResourceLoads()
+            onNodeWithText(getString(Res.string.app_name)).assertExists()
             onNodeWithText("Min").assertExists()
             onNodeWithContentDescription("navigate back").assertDoesNotExist()
         }
@@ -87,7 +83,7 @@ class GetRandomIntAppTest {
 
             // Act
             onNodeWithContentDescription("menu").performClick()
-            awaitExactlyOne(hasText("Source code") or hasText("ソースコード"))
+            awaitResourceLoads()
             onNode(hasText("Source code") or hasText("ソースコード")).performClick()
 
             // Assert
@@ -121,12 +117,10 @@ class GetRandomIntAppTest {
             onNodeWithText("Min").assertIsFocused()
         }
 
-    private suspend fun ComposeUiTest.awaitExactlyOne(matcher: SemanticsMatcher) =
-        withContext(Dispatchers.Default) {
-            withTimeout(5.seconds) {
-                while (onAllNodes(matcher).fetchSemanticsNodes().size != 1) {
-                    delay(10.milliseconds)
-                }
-            }
-        }
+    @OptIn(ExperimentalResourceApi::class)
+    private suspend fun ComposeUiTest.awaitResourceLoads() {
+        waitForIdle()
+        awaitPendingResourceStateLoads()
+        waitForIdle()
+    }
 }
